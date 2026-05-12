@@ -1,0 +1,12 @@
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\bin\Debug\net10.0\Communication.Grpc.deps.json
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\bin\Debug\net10.0\Communication.Grpc.dll
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\bin\Debug\net10.0\Communication.Grpc.pdb
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\obj\Debug\net10.0\Communication.Grpc.csproj.AssemblyReference.cache
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\obj\Debug\net10.0\Communication.Grpc.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\obj\Debug\net10.0\Communication.Grpc.AssemblyInfoInputs.cache
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\obj\Debug\net10.0\Communication.Grpc.AssemblyInfo.cs
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\obj\Debug\net10.0\Communication.Grpc.csproj.CoreCompileInputs.cache
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\obj\Debug\net10.0\Communication.Grpc.dll
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\obj\Debug\net10.0\refint\Communication.Grpc.dll
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\obj\Debug\net10.0\Communication.Grpc.pdb
+C:\Development\Training\Grpc_Order_App\common\Communication\Communication.Grpc\obj\Debug\net10.0\ref\Communication.Grpc.dll

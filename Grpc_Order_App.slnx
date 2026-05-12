@@ -1,0 +1,19 @@
+﻿<Solution>
+	<Folder Name="/api/">
+	</Folder>
+	<Folder Name="/api/OrderApi/">
+		<Project Path="api/OrderApi/OrderApi.csproj" />
+	</Folder>
+	<Folder Name="/common/">
+	</Folder>
+	<Folder Name="/common/Communication/">
+		<Project Path="common/Communication/Communication.Grpc/Communication.Grpc.csproj" />
+	</Folder>
+	<Folder Name="/frontend/">
+	</Folder>
+	<Folder Name="/microservices/">
+	</Folder>
+	<Folder Name="/microservices/OrderService/">
+		<Project Path="microservice/OrderService/OrderService/OrderService.csproj" />
+	</Folder>
+</Solution>
