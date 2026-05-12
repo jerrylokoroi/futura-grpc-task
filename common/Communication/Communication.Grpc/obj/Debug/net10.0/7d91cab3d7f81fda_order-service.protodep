@@ -1,4 +1,0 @@
-obj\Debug\net10.0\Protos\Order/Order-serviceGrpc.cs \
-obj\Debug\net10.0\Protos\Order/OrderService.cs: C:/Users/j.ekuwam/.nuget/packages/grpc.tools/2.80.0/build/native/include/google/protobuf/empty.proto\
- C:/Users/j.ekuwam/.nuget/packages/grpc.tools/2.80.0/build/native/include/google/protobuf/timestamp.proto\
- Protos/Order/order-service.proto
