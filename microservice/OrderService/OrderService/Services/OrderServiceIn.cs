@@ -3,6 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Data;
+using OrderService.Models;
 
 namespace OrderService.Services;
 
@@ -25,7 +26,6 @@ public class OrderServiceIn : OrderGrpcService.OrderServiceBase
             .ToListAsync(context.CancellationToken);
 
         var response = new GetOrdersResponse();
-
         response.Orders.AddRange(orders.Select(order => new OrderItem
         {
             Id = order.Id,
@@ -36,6 +36,29 @@ public class OrderServiceIn : OrderGrpcService.OrderServiceBase
         }));
 
         return response;
+    }
+
+    public override async Task<OrderItem> CreateOrder(CreateOrderRequest request, ServerCallContext context)
+    {
+        var order = new Order
+        {
+            CustomerName = request.CustomerName,
+            Product = request.Product,
+            Quantity = request.Quantity,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _dbContext.Orders.Add(order);
+        await _dbContext.SaveChangesAsync(context.CancellationToken);
+
+        return new OrderItem
+        {
+            Id = order.Id,
+            CustomerName = order.CustomerName,
+            Product = order.Product,
+            Quantity = order.Quantity,
+            CreatedAt = ToTimestamp(order.CreatedAt)
+        };
     }
 
     private static Timestamp ToTimestamp(DateTime dateTime)

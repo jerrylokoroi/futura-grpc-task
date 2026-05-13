@@ -38,6 +38,15 @@ services:
       - GrpcServices__OrderService=http://order-service:5201
     depends_on:
       - order-service
+    
+  frontend:
+    build:
+      context: ./frontend/orders-app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - order-api
 
 volumes:
   postgres_data:
