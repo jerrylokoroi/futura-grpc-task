@@ -11,10 +11,12 @@ using OrderGrpcService = Communication.Grpc.Protos.OrderService.OrderService;
 public class OrderServiceOut
 {
     private readonly IConfiguration _configuration;
+    private readonly IMapper _mapper;
 
-    public OrderServiceOut(IConfiguration configuration)
+    public OrderServiceOut(IConfiguration configuration, IMapper mapper)
     {
         _configuration = configuration;
+        _mapper = mapper;
     }
 
     private GrpcChannel CreateChannel()
@@ -26,20 +28,12 @@ public class OrderServiceOut
         });
     }
 
-    private static OrderViewModel MapToViewModel(OrderItem order) =>
-        new OrderViewModel(
-            order.Id,
-            order.CustomerName,
-            order.Product,
-            order.Quantity,
-            order.CreatedAt.ToDateTime());
-
     public async Task<IReadOnlyList<OrderViewModel>> GetOrdersAsync()
     {
         using var channel = CreateChannel();
         var client = new OrderGrpcService.OrderServiceClient(channel);
         var response = await client.GetOrdersAsync(new Empty());
-        return response.Orders.Select(MapToViewModel).ToList();
+        return _mapper.Map<List<OrderViewModel>>(response.Orders);
     }
 
     public async Task<OrderViewModel> CreateOrderAsync(CreateOrderRequest request)
@@ -47,6 +41,6 @@ public class OrderServiceOut
         using var channel = CreateChannel();
         var client = new OrderGrpcService.OrderServiceClient(channel);
         var order = await client.CreateOrderAsync(request);
-        return MapToViewModel(order);
+        return _mapper.Map<OrderViewModel>(order);
     }
 }
