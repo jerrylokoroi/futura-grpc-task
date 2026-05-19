@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-api
+spec:
+  selector:
+    matchLabels:
+      app: order-api
+  template:
+    metadata:
+      labels:
+        app: order-api
+    spec:
+      containers:
+        - name: order-api
+          image: grpc_order_app-order-api:latest
+          imagePullPolicy: Never
+          env:
+            - name: GrpcServices__OrderService
+              value: "http://order-service:5201"
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-api
+spec:
+  selector:
+    app: order-api
+  ports:
+    - port: 8080
+      targetPort: 8080

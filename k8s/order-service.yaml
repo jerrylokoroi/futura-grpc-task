@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: grpc_order_app-order-service:latest
+          imagePullPolicy: Never
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              value: "Host=db;Port=5432;Database=ordersdb;Username=postgres;Password=postgres"
+          ports:
+            - containerPort: 5201
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  selector:
+    app: order-service
+  ports:
+    - port: 5201
+      targetPort: 5201
