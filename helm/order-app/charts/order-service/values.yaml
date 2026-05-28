@@ -1,4 +1,4 @@
-imageName: grpc_order_app-order-service:latest
+imageName: jerrylokoroi/order-service:latest
 service:
   metadata:
     name: order-service

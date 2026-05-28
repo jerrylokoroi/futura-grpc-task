@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API_URL = process.env.REACT_APP_API_URL || "";
+const API_URL = process = "";
 function App() {
   const [orders, setOrders] = useState([]);
   const [customerName, setCustomerName] = useState("");

@@ -1,4 +1,4 @@
-imageName: grpc_order_app-frontend:latest
+imageName: jerrylokoroi/frontend:latest
 service:
   metadata:
     name: frontend
