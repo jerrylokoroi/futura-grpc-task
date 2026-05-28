@@ -1,0 +1,8 @@
+imageName: grpc_order_app-frontend:latest
+service:
+  metadata:
+    name: frontend
+    labels:
+      product: frontend
+port: 80
+orderApiUrl: "http://order-api:8080"
