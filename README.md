@@ -28,6 +28,12 @@ helm upgrade --install order-app helm/order-app -f helm/order-app/values-custome
 
 helm upgrade --install order-app helm/order-app -f helm/order-app/values-customer-2.yaml -n customer2
 
+### 6. Add hosts file entries (Windows)
+Add the following lines to C:\Windows\System32\drivers\etc\hosts
+
+127.0.0.1 customer1.localhost
+127.0.0.1 customer2.localhost
+
 ## Access
 - customer1: http://customer1.localhost:8080
 - customer2: http://customer2.localhost:8080
