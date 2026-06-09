@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: 
+    inputs: 
+      tag:
+        description: "image tag"
+        required: false
+        default: "latest"
 
 jobs:
   deploy:
