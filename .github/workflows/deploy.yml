@@ -76,7 +76,7 @@ jobs:
 
       - name: Deploy via Helm
         run: |
-          cd helm/order-app
+          cd microservice/helm/order-app
           helm dependency build .
           helm upgrade --install order-app . -f values-customer-1.yaml -n customer1
           helm upgrade --install order-app . -f values-customer-2.yaml -n customer2
