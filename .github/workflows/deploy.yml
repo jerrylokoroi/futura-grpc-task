@@ -92,3 +92,4 @@ jobs:
           kubectl get pods -n customer2
           curl -f http://customer1.localhost/orders || echo "customer1 test failed"
           curl -f http://customer2.localhost/orders || echo "customer2 test failed"
+          
