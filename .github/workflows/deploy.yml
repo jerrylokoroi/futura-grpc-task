@@ -86,10 +86,23 @@ jobs:
           kubectl wait --for=condition=ready pod --all -n customer1 --timeout=120s
           kubectl wait --for=condition=ready pod --all -n customer2 --timeout=120s
 
-      - name: Run integration tests
+      - name: Run integration tests (Kubernetes native)
         run: |
+          echo "Checking pods..."
           kubectl get pods -n customer1
           kubectl get pods -n customer2
-          curl -f http://customer1.localhost/orders || echo "customer1 test failed"
-          curl -f http://customer2.localhost/orders || echo "customer2 test failed"
+
+          echo "Testing frontend service (cluster internal)..."
+          kubectl run curl-test --image=curlimages/curl --rm -i --restart=Never -- \
+            curl -f http://frontend.customer1.svc.cluster.local
+
+          kubectl run curl-test --image=curlimages/curl --rm -i --restart=Never -- \
+            curl -f http://frontend.customer2.svc.cluster.local
+
+          echo "Testing order-api service..."
+          kubectl run curl-test --image=curlimages/curl --rm -i --restart=Never -- \
+            curl -f http://order-api.customer1.svc.cluster.local:8080/orders
+
+          kubectl run curl-test --image=curlimages/curl --rm -i --restart=Never -- \
+            curl -f http://order-api.customer2.svc.cluster.local:8080/orders
           
