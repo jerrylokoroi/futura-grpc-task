@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API_URL = process = "";
+const API_URL = "";
 function App() {
   const [orders, setOrders] = useState([]);
   const [customerName, setCustomerName] = useState("");
@@ -10,7 +10,7 @@ function App() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${API_URL}/orders`);
+      const res = await fetch("/orders");
       const data = await res.json();
       setOrders(data);
     } catch (err) {
@@ -26,7 +26,7 @@ function App() {
     if (!customerName || !product) return;
     setLoading(true);
     try {
-      await fetch(`${API_URL}/orders`, {
+      await fetch("/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ customerName, product, quantity }),
