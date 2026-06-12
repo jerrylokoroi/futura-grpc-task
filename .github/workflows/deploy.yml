@@ -1,4 +1,4 @@
-﻿name: Deploy to Kind Cluster
+name: Deploy to Kind Cluster
 
 on:
   push:
@@ -10,7 +10,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,8 +48,7 @@ jobs:
           kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
 
       - name: Install Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+        run: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
       - name: Create namespaces
         run: |
@@ -59,16 +57,8 @@ jobs:
 
       - name: Create secrets
         run: |
-          kubectl create secret generic db-secret \
-            --from-literal=POSTGRES_DB=ordersdb \
-            --from-literal=POSTGRES_USER=postgres \
-            --from-literal=POSTGRES_PASSWORD=postgres \
-            -n customer1
-          kubectl create secret generic db-secret \
-            --from-literal=POSTGRES_DB=ordersdb \
-            --from-literal=POSTGRES_USER=postgres \
-            --from-literal=POSTGRES_PASSWORD=postgres \
-            -n customer2
+          kubectl create secret generic db-secret --from-literal=POSTGRES_DB=ordersdb --from-literal=POSTGRES_USER=postgres --from-literal=POSTGRES_PASSWORD=postgres -n customer1
+          kubectl create secret generic db-secret --from-literal=POSTGRES_DB=ordersdb --from-literal=POSTGRES_USER=postgres --from-literal=POSTGRES_PASSWORD=postgres -n customer2
 
       - name: Deploy via Helm
         run: |
@@ -82,38 +72,29 @@ jobs:
           kubectl wait --for=condition=ready pod --all -n customer1 --timeout=120s
           kubectl wait --for=condition=ready pod --all -n customer2 --timeout=120s
 
-      - name: Run integration tests (multi-tenant validation)
-          run: |
-            set -e
-            
-            echo "Checking pods..."
-            kubectl get pods -n customer1
-            kubectl get pods -n customer2
-            
-            echo "===== CUSTOMER 1 TEST ====="
-            
-            kubectl run curl-c1-post --rm -i --restart=Never --image=curlimages/curl --namespace=default -- curl -s -X POST http://order-api.customer1.svc.cluster.local:8080/orders -H "Content-Type: application/json" -d '{"customerName":"Alice","product":"Laptop","quantity":1}' 2>/dev/null || true
-            
-            sleep 2
-            
-            GET_RESP_1=$(kubectl run curl-c1-get --rm -i --restart=Never --image=curlimages/curl --namespace=default -- curl -s http://order-api.customer1.svc.cluster.local:8080/orders 2>/dev/null)
-            
-            echo "Customer1 response: $GET_RESP_1"
-            echo "$GET_RESP_1" | grep "Alice" || (echo "FAILED: Alice not found" && exit 1)
-            echo "$GET_RESP_1" | grep "Laptop" || (echo "FAILED: Laptop not found" && exit 1)
-            echo "Customer1 PASSED"
-            
-            echo "===== CUSTOMER 2 TEST ====="
-            
-            kubectl run curl-c2-post --rm -i --restart=Never --image=curlimages/curl --namespace=default -- curl -s -X POST http://order-api.customer2.svc.cluster.local:8080/orders -H "Content-Type: application/json" -d '{"customerName":"Bob","product":"Phone","quantity":1}' 2>/dev/null || true
-            
-            sleep 2
-            
-            GET_RESP_2=$(kubectl run curl-c2-get --rm -i --restart=Never --image=curlimages/curl --namespace=default -- curl -s http://order-api.customer2.svc.cluster.local:8080/orders 2>/dev/null)
-            
-            echo "Customer2 response: $GET_RESP_2"
-            echo "$GET_RESP_2" | grep "Bob" || (echo "FAILED: Bob not found" && exit 1)
-            echo "$GET_RESP_2" | grep "Phone" || (echo "FAILED: Phone not found" && exit 1)
-            echo "Customer2 PASSED"
-            
-            echo "===== ALL INTEGRATION TESTS PASSED ====="
+      - name: Run integration tests
+        run: |
+          set -e
+          echo "Checking pods..."
+          kubectl get pods -n customer1
+          kubectl get pods -n customer2
+
+          echo "===== CUSTOMER 1 TEST ====="
+          kubectl run curl-c1-post --rm -i --restart=Never --image=curlimages/curl --namespace=default -- curl -s -X POST http://order-api.customer1.svc.cluster.local:8080/orders -H "Content-Type: application/json" -d '{"customerName":"Alice","product":"Laptop","quantity":1}' 2>/dev/null || true
+          sleep 2
+          GET_RESP_1=$(kubectl run curl-c1-get --rm -i --restart=Never --image=curlimages/curl --namespace=default -- curl -s http://order-api.customer1.svc.cluster.local:8080/orders 2>/dev/null)
+          echo "Customer1 response: $GET_RESP_1"
+          echo "$GET_RESP_1" | grep "Alice" || (echo "FAILED: Alice not found" && exit 1)
+          echo "$GET_RESP_1" | grep "Laptop" || (echo "FAILED: Laptop not found" && exit 1)
+          echo "Customer1 PASSED"
+
+          echo "===== CUSTOMER 2 TEST ====="
+          kubectl run curl-c2-post --rm -i --restart=Never --image=curlimages/curl --namespace=default -- curl -s -X POST http://order-api.customer2.svc.cluster.local:8080/orders -H "Content-Type: application/json" -d '{"customerName":"Bob","product":"Phone","quantity":1}' 2>/dev/null || true
+          sleep 2
+          GET_RESP_2=$(kubectl run curl-c2-get --rm -i --restart=Never --image=curlimages/curl --namespace=default -- curl -s http://order-api.customer2.svc.cluster.local:8080/orders 2>/dev/null)
+          echo "Customer2 response: $GET_RESP_2"
+          echo "$GET_RESP_2" | grep "Bob" || (echo "FAILED: Bob not found" && exit 1)
+          echo "$GET_RESP_2" | grep "Phone" || (echo "FAILED: Phone not found" && exit 1)
+          echo "Customer2 PASSED"
+
+          echo "===== ALL INTEGRATION TESTS PASSED ====="
