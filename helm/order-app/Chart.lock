@@ -1,0 +1,15 @@
+dependencies:
+- name: db
+  repository: file://charts/db
+  version: 1.0.0
+- name: order-service
+  repository: file://charts/order-service
+  version: 1.0.0
+- name: order-api
+  repository: file://charts/order-api
+  version: 1.0.0
+- name: frontend
+  repository: file://charts/frontend
+  version: 1.0.0
+digest: sha256:994caf84654a2a23a35434b48302b3272685efcf8a88567f690836666e645e6b
+generated: "2026-05-21T16:15:48.6084427+02:00"
