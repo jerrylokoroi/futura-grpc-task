@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Values.service.metadata.labels.product }}-config
-  namespace: {{ .Values.global.namespace }}
-  labels:
-    app: {{ .Values.service.metadata.labels.product }}
-data:
-  GrpcServices__OrderService: {{ .Values.grpcServiceUrl }}

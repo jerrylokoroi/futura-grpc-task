@@ -1,8 +1,0 @@
-imageName: jerrylokoroi/frontend:latest
-service:
-  metadata:
-    name: frontend
-    labels:
-      product: frontend
-port: 80
-orderApiUrl: "http://order-api:8080"

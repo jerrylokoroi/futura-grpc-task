@@ -1,8 +1,0 @@
-imageName: jerrylokoroi/order-api:latest
-service:
-  metadata:
-    name: order-api
-    labels:
-      product: order-api
-port: 8080
-grpcServiceUrl: "http://order-service:5201"

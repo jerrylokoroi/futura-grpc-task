@@ -1,8 +1,0 @@
-imageName: postgres:16-alpine
-service:
-  metadata:
-    name: db
-    labels:
-      product: db
-storage: 1Gi
-secretName: db-secret
