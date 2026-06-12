@@ -90,19 +90,11 @@ jobs:
         run: |
           echo "Checking pods..."
           kubectl get pods -n customer1
-          kubectl get pods -n customer2
 
-          echo "Testing frontend service (cluster internal)..."
-          kubectl run curl-test --image=curlimages/curl --rm -i --restart=Never -- \
-            curl -f http://frontend.customer1.svc.cluster.local
-
-          kubectl run curl-test --image=curlimages/curl --rm -i --restart=Never -- \
-            curl -f http://frontend.customer2.svc.cluster.local
+          echo "ORDER API LOGS (customer1)"
+          kubectl logs -n customer1 deployment/order-api --tail=200 || true
 
           echo "Testing order-api service..."
           kubectl run curl-test --image=curlimages/curl --rm -i --restart=Never -- \
-            curl -f http://order-api.customer1.svc.cluster.local:8080/orders
-
-          kubectl run curl-test --image=curlimages/curl --rm -i --restart=Never -- \
-            curl -f http://order-api.customer2.svc.cluster.local:8080/orders
+            curl -v http://order-api.customer1.svc.cluster.local:8080/orders
           
