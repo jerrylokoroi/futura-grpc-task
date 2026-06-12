@@ -86,15 +86,42 @@ jobs:
           kubectl wait --for=condition=ready pod --all -n customer1 --timeout=120s
           kubectl wait --for=condition=ready pod --all -n customer2 --timeout=120s
 
-      - name: Run integration tests (Kubernetes native)
+      - name: Run integration tests (multi-tenant validation)
         run: |
+          set -e
+
           echo "Checking pods..."
           kubectl get pods -n customer1
+          kubectl get pods -n customer2
 
-          echo "ORDER API LOGS (customer1)"
-          kubectl logs -n customer1 deployment/order-api --tail=200 || true
+          echo "Testing CUSTOMER 1 flow..."
 
-          echo "Testing order-api service..."
-          kubectl run curl-test --image=curlimages/curl --rm -i --restart=Never -- \
-            curl -v http://order-api.customer1.svc.cluster.local:8080/orders
+          # 1. CREATE ORDER (customer1)
+          curl -s -X POST http://order-api.customer1.svc.cluster.local:8080/orders \
+            -H "Content-Type: application/json" \
+            -d '{"customerName":"Alice","product":"Laptop","quantity":1}'
+
+          # 2. GET ORDERS (customer1)
+          RESPONSE1=$(curl -s http://order-api.customer1.svc.cluster.local:8080/orders)
+          echo "Customer1 response: $RESPONSE1"
+
+          # 3. VALIDATE
+          echo "$RESPONSE1" | grep "Alice" || (echo "Customer1 test failed" && exit 1)
+
+
+          echo "Testing CUSTOMER 2 flow..."
+
+          # 1. CREATE ORDER (customer2)
+          curl -s -X POST http://order-api.customer2.svc.cluster.local:8080/orders \
+            -H "Content-Type: application/json" \
+            -d '{"customerName":"Bob","product":"Phone","quantity":2}'
+
+          # 2. GET ORDERS (customer2)
+          RESPONSE2=$(curl -s http://order-api.customer2.svc.cluster.local:8080/orders)
+          echo "Customer2 response: $RESPONSE2"
+
+          # 3. VALIDATE
+          echo "$RESPONSE2" | grep "Bob" || (echo "Customer2 test failed" && exit 1)
+
+          echo "All integration tests passed"
           
